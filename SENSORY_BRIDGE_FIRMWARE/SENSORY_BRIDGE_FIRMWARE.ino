@@ -101,6 +101,7 @@ enum lightshow_modes {
 
 // Setup, runs only one time ---------------------------------------------------------
 void setup() {
+  printf("Init SB\n");
   init_system();  // (system.h) Initialize all hardware and arrays
 
   // Create thread specifically for LED updates

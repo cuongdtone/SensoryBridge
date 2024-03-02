@@ -76,7 +76,7 @@ void check_buttons(uint32_t t_now) {
         skip_click = true;
         mode_transition_queued = false;
         MASTER_BRIGHTNESS = 1.0;
-        if(debug_mode){USBSerial.println("DOUBLE CLICK");}
+        if(debug_mode){printf("DOUBLE CLICK\n");}
       }
 
       uint32_t press_duration = mode_button.last_up - mode_button.last_down;

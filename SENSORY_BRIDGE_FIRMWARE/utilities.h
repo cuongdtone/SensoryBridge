@@ -29,9 +29,8 @@ void print_chip_id() {
 
   b.long_val = chip_id; // ....................... Assign chip_id_low to the long_val member of the struct
   bytes_to_hex_string(b.bytes, hex_string); // ... Convert the bytes of chip_id_low to a zero-padded hex string
-  USBSerial.print(hex_string); // ................ Print the hex string to the serial port
-
-  USBSerial.println(); // Print a newline character
+  printf(hex_string); // ................ Print the hex string to the serial port
+  printf("\n");
 }
 
 void blur_array(float* input, int length, int kernel_size) {

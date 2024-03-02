@@ -15,7 +15,7 @@ void start_noise_cal() {
   for (uint8_t i = 0; i < NATIVE_RESOLUTION; i++) {
     ui_mask[i] = 0;
   }
-  USBSerial.println("STARTING NOISE CAL");
+  printf("STARTING NOISE CAL\n");
 }
 
 void clear_noise_cal() {
@@ -25,5 +25,5 @@ void clear_noise_cal() {
   }
   save_config();
   save_ambient_noise_calibration();
-  USBSerial.println("NOISE CAL CLEARED");
+  printf("NOISE CAL CLEARED\n");
 }

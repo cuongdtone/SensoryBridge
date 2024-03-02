@@ -137,7 +137,7 @@ void watchdog_notify(uint32_t t_now_us) {
 
 void watch_timeout(uint32_t t_now_us) {
   if (t_now_us - last_watchdog_time > WATCHDOG_TIMEOUT_US) {
-    USBSerial.println("!-- TIMEOUT!");
+    printf("!-- TIMEOUT!\n");
 
     current_step = COMPLETE;
     checksum_passed = false;
@@ -165,13 +165,12 @@ void init_i2s_for_data() {
 
   // Init I2S Driver
   esp_err_t result = i2s_driver_install(I2S_PORT, &i2s_config, 0, NULL);
-  USBSerial.print("INIT I2S: ");
-  USBSerial.println(result == ESP_OK ? PASS : FAIL);
+  printf("INIT I2S: %s\n", result == ESP_OK ? PASS : FAIL);
 
   if (result != ESP_OK) {
     pinMode(8, OUTPUT);
     while (true) {
-      USBSerial.println("INIT FAIL");
+      printf("INIT FAIL\n");
       digitalWrite(8, HIGH);
       delay(100);
       digitalWrite(8, LOW);
@@ -185,8 +184,7 @@ void init_i2s_for_data() {
 
   // Set I2S pins
   result = i2s_set_pin(I2S_PORT, &pin_config);
-  USBSerial.print("I2S SET PINS: ");
-  USBSerial.println(result == ESP_OK ? PASS : FAIL);
+  printf("I2S SET PINS: %s\n", result == ESP_OK ? PASS : FAIL);
 }
 
 void init_data_frequencies() {
@@ -324,16 +322,15 @@ void parse_data() {
 
   /*
     for (uint8_t i = 0; i < 4; i++) {
-    USBSerial.print(top_frequencies[i]);
-    USBSerial.print("\t");
+    printf("%d\t", top_frequencies[i]);
     }
-    USBSerial.println();
+    printf("\n");
   */
 
   if (current_step == WAITING) {
     if (top_frequency(697, 4) && top_frequency(1209, 4) && top_frequency(941, 4) && top_frequency(1633, 4)) {
       if (magic_tone_present == false) {
-        USBSerial.println("MAGIC TONE!");
+        printf("MAGIC TONE!\n");
         magic_tone_present = true;
       }
     }
@@ -341,7 +338,7 @@ void parse_data() {
       if (magic_tone_present == true) {
         magic_tone_present = false;
 
-        //USBSerial.println("MEASURING PULSE LENGTH...");
+        printf("MEASURING PULSE LENGTH...\n");
         current_step = PULSE_MEASUREMENT;
         led_expansion = 0.0;
         watchdog_notify(t_now_us);
@@ -373,11 +370,9 @@ void parse_data() {
             measured_pulse_count = 0;
             measured_pulse_duration_sum = 0;
 
-            //USBSerial.print("PULSE LENGTH: ");
-            //USBSerial.print(measured_pulse_duration);
-            //USBSerial.println("us");
+            //printf("PULSE LENGTH: %fus\n", measured_pulse_duration);
 
-            //USBSerial.println("MEASURING TONAL RESPONSE...");
+            //printf("MEASURING TONAL RESPONSE...\n");
             current_step = TONAL_MEASUREMENT;
             watchdog_notify(t_now_us);
           }
@@ -407,7 +402,7 @@ void parse_data() {
       if (solved == true) {
         tone_measurement_started_time = -1; // max
 
-        //USBSerial.println("MEASURING EMPTY TONE...");
+        //printf("MEASURING EMPTY TONE...\n");
         current_step = EMPTY_TONE_MEASUREMENT;
         watchdog_notify(t_now_us);
         delay(10);
@@ -428,7 +423,7 @@ void parse_data() {
         if (time_to_measure == true) {
           if (top_frequency(697, 3) && top_frequency(1209, 3)) {
             tones_valid = true;
-            //USBSerial.println("GOT PAIR 1");
+            //printf("GOT PAIR 1\n");
             calculate_tone_multiplier(0);
             calculate_tone_multiplier(4);
             measured_tone_count++;
@@ -437,7 +432,7 @@ void parse_data() {
           }
           else if (top_frequency(770, 3) && top_frequency(1336, 3)) {
             tones_valid = true;
-            //USBSerial.println("GOT PAIR 2");
+            //printf("GOT PAIR 2\n");
             calculate_tone_multiplier(1);
             calculate_tone_multiplier(5);
             measured_tone_count++;
@@ -447,7 +442,7 @@ void parse_data() {
 
           else if (top_frequency(852, 3) && top_frequency(1477, 3)) {
             tones_valid = true;
-            //USBSerial.println("GOT PAIR 3");
+            //printf("GOT PAIR 3\n");
             calculate_tone_multiplier(2);
             calculate_tone_multiplier(6);
             measured_tone_count++;
@@ -457,7 +452,7 @@ void parse_data() {
 
           else if (top_frequency(941, 3) && top_frequency(1633, 3)) {
             tones_valid = true;
-            //USBSerial.println("GOT PAIR 4");
+            //printf("GOT PAIR 4\n");
             calculate_tone_multiplier(3);
             calculate_tone_multiplier(7);
             measured_tone_count++;
@@ -485,7 +480,7 @@ void parse_data() {
         magnitude_multipliers[i] = magnitude_multipliers_temp[i];
       }
 
-      USBSerial.print("BEGIN RX...");
+      printf("BEGIN RX...");
       current_step = DATA_TRANSMISSION;
       rx_begun = false;
       watchdog_notify(t_now_us);
@@ -502,7 +497,7 @@ void parse_data() {
 
       if (total_bits >= 8) {
         if (t_now_us - recent_pulse_time >= (measured_pulse_duration * 4)) { // if >= pulse_duration*4 since last pulse
-          USBSerial.println("DONE!");
+          printf("DONE!\n");
           recv_checksum = convert_bit_data_to_string();
           calc_checksum = checksum(character_data, strlen(character_data));
 
@@ -559,9 +554,7 @@ void parse_data() {
       current_step = WAITING;
     }
     else {
-      USBSerial.print("MESSAGE: |");
-      USBSerial.print(character_data);
-      USBSerial.println("|");
+      printf("MESSAGE: |%s|", character_data);
     }
   }
 }

@@ -10,21 +10,19 @@ void update_config_filename(uint32_t input) {
 
 // Restore all defaults defined in globals.h by removing saved data and rebooting
 void factory_reset() {
-  USBSerial.print("Deleting ");
-  USBSerial.print(config_filename);
-  USBSerial.print(": ");
+  printf("Deleting %s: ", config_filename);
 
   if (LittleFS.remove(config_filename)) {
-    USBSerial.println("file deleted");
+    printf("file deleted\n");
   } else {
-    USBSerial.println("delete failed");
+    printf("delete failed\n");
   }
 
-  USBSerial.print("Deleting noise_cal.bin: ");
+  printf("Deleting noise_cal.bin: ");
   if (LittleFS.remove("/noise_cal.bin")) {
-    USBSerial.println("file deleted");
+    printf("file deleted\n");
   } else {
-    USBSerial.println("delete failed");
+    printf("delete failed\n");
   }
 
   reboot();
@@ -32,14 +30,12 @@ void factory_reset() {
 
 // Restore only configuration defaults
 void restore_defaults() {
-  USBSerial.print("Deleting ");
-  USBSerial.print(config_filename);
-  USBSerial.print(": ");
+  printf("Deleting %s: ", config_filename);
 
   if (LittleFS.remove(config_filename)) {
-    USBSerial.println("file deleted");
+    printf("file deleted\n");
   } else {
-    USBSerial.println("delete failed");
+    printf("delete failed\n");
   }
 
   reboot();
@@ -48,14 +44,14 @@ void restore_defaults() {
 // Save configuration to LittleFS
 void save_config() {
   if (debug_mode) {
-    USBSerial.print("LITTLEFS: ");
+    printf("LITTLEFS: ");
   }
   File file = LittleFS.open(config_filename, FILE_WRITE);
   if (!file) {
     if (debug_mode) {
-      USBSerial.print("Failed to open ");
-      USBSerial.print(config_filename);
-      USBSerial.println(" for writing!");
+      printf("Failed to open ");
+      printf(config_filename);
+      printf(" for writing!\n");
     }
     return;
   } else {
@@ -68,9 +64,9 @@ void save_config() {
     }
 
     if (debug_mode) {
-      USBSerial.print("WROTE ");
-      USBSerial.print(config_filename);
-      USBSerial.println(" SUCCESSFULLY");
+      printf("WROTE ");
+      printf(config_filename);
+      printf(" SUCCESSFULLY\n");
     }
   }
   file.close();
@@ -79,7 +75,7 @@ void save_config() {
 // Save configuration to LittleFS 10 seconds from now
 void save_config_delayed() {
   if(debug_mode == true){
-    USBSerial.println("CONFIG SAVE QUEUED");
+    printf("CONFIG SAVE QUEUED\n");
   }
   next_save_time = millis()+5000;
   settings_updated = true;
@@ -88,16 +84,16 @@ void save_config_delayed() {
 // Load configuration from LittleFS
 void load_config() {
   if (debug_mode) {
-    USBSerial.print("LITTLEFS: ");
+    printf("LITTLEFS: ");
   }
 
   bool queue_factory_reset = false;
   File file = LittleFS.open(config_filename, FILE_READ);
   if (!file) {
     if (debug_mode) {
-      USBSerial.print("Failed to open ");
-      USBSerial.print(config_filename);
-      USBSerial.println(" for reading!");
+      printf("Failed to open ");
+      printf(config_filename);
+      printf(" for reading!\n");
     }
     return;
   } else {
@@ -110,7 +106,7 @@ void load_config() {
     memcpy(&CONFIG, config_buffer, sizeof(CONFIG));
 
     if (debug_mode) {
-      USBSerial.println("READ CONFIG SUCCESSFULLY");
+      printf("READ CONFIG SUCCESSFULLY\n");
     }
   }
   file.close();
@@ -123,12 +119,12 @@ void load_config() {
 // Save noise calibration to LittleFS
 void save_ambient_noise_calibration() {
   if (debug_mode) {
-    USBSerial.print("SAVING AMBIENT_NOISE PROFILE... ");
+    printf("SAVING AMBIENT_NOISE PROFILE... ");
   }
   File file = LittleFS.open("/noise_cal.bin", FILE_WRITE);
   if (!file) {
     if (debug_mode) {
-      USBSerial.println("Failed to open file for writing!");
+      printf("Failed to open file for writing!\n");
     }
     return;
   }
@@ -149,19 +145,19 @@ void save_ambient_noise_calibration() {
 
   file.close();
   if (debug_mode) {
-    USBSerial.println("SAVE COMPLETE");
+    printf("SAVE COMPLETE\n");
   }
 }
 
 // Load noise calibration from LittleFS
 void load_ambient_noise_calibration() {
   if (debug_mode) {
-    USBSerial.print("LOADING AMBIENT_NOISE PROFILE... ");
+    printf("LOADING AMBIENT_NOISE PROFILE... ");
   }
   File file = LittleFS.open("/noise_cal.bin", FILE_READ);
   if (!file) {
     if (debug_mode) {
-      USBSerial.println("Failed to open file for reading!");
+      printf("Failed to open file for reading!\n");
     }
     return;
   }
@@ -180,14 +176,14 @@ void load_ambient_noise_calibration() {
 
   file.close();
   if (debug_mode) {
-    USBSerial.println("LOAD COMPLETE");
+    printf("LOAD COMPLETE\n");
   }
 }
 
 // Initialize LittleFS
 void init_fs() {
-  USBSerial.print("INIT FILESYSTEM: ");
-  USBSerial.println(LittleFS.begin(true) == true ? PASS : FAIL);
+  printf("INIT FILESYSTEM: ");
+  printf("%s\n", LittleFS.begin(true) == true ? PASS : FAIL);
 
   update_config_filename(FIRMWARE_VERSION);
 

@@ -729,8 +729,7 @@ void init_leds() {
 
   leds_started = true;
 
-  USBSerial.print("INIT_LEDS: ");
-  USBSerial.println(leds_started == true ? PASS : FAIL);
+  printf("INIT_LEDS: %s\n", leds_started == true ? PASS : FAIL);
 }
 
 void blocking_flash(CRGB16 col) {
@@ -954,7 +953,7 @@ void run_transition_fade() {
       noise_transition_queued = false;
       // start noise cal
       if (debug_mode) {
-        USBSerial.println("COLLECTING AMBIENT NOISE SAMPLES...");
+        printf("COLLECTING AMBIENT NOISE SAMPLES...\n");
       }
       propagate_noise_cal();
       start_noise_cal();

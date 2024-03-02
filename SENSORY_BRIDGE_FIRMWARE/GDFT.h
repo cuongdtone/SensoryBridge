@@ -112,7 +112,7 @@ void IRAM_ATTR process_GDFT() {
     magnitudes_normalized[i] = normalized_magnitude;
 
     if (frequencies[i].target_freq == 440.0) {
-      //USBSerial.println(magnitudes_normalized[i]);
+      //printf(magnitudes_normalized[i]);
     }
 
     magnitudes_normalized_avg[i] = (magnitudes_normalized[i] * 0.3) + (magnitudes_normalized_avg[i] * (1.0 - 0.3));
@@ -128,7 +128,7 @@ void IRAM_ATTR process_GDFT() {
     noise_iterations++;
     if (noise_iterations >= 256) {  // Calibration complete
       noise_complete = true;
-      USBSerial.println("NOISE CAL COMPLETE");
+      printf("NOISE CAL COMPLETE\n");
       CONFIG.DC_OFFSET = dc_offset_sum / 256.0;  // Calculate average DC offset and store it
       save_ambient_noise_calibration();           // Save results to noise_cal.bin
       save_config();                              // Save config to config.bin
@@ -155,14 +155,14 @@ void IRAM_ATTR process_GDFT() {
   if (stream_magnitudes == true) {
     if (serial_iter >= 2) {  // Don't print every frame
       serial_iter = 0;
-      USBSerial.print("sbs((magnitudes=");
+      printf("sbs((magnitudes=");
       for (uint16_t i = 0; i < NUM_FREQS; i++) {
-        USBSerial.print(uint32_t(magnitudes[i]));
+        printf("%d", uint32_t(magnitudes[i]));
         if (i < NUM_FREQS - 1) {
-          USBSerial.print(',');
+          printf(",");
         }
       }
-      USBSerial.println("))");
+      printf("))\n");
     }
   }
   */

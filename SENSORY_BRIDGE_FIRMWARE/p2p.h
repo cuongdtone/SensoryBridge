@@ -45,17 +45,17 @@ struct SB_COMMAND_IDENTIFY_MAIN {
 };
 
 void print_mac(const uint8_t *mac_addr) {
-  USBSerial.print(mac_addr[0], HEX);
-  USBSerial.print(':');
-  USBSerial.print(mac_addr[1], HEX);
-  USBSerial.print(':');
-  USBSerial.print(mac_addr[2], HEX);
-  USBSerial.print(':');
-  USBSerial.print(mac_addr[3], HEX);
-  USBSerial.print(':');
-  USBSerial.print(mac_addr[4], HEX);
-  USBSerial.print(':');
-  USBSerial.print(mac_addr[5], HEX);
+  printf("%02X", mac_addr[0]);
+  printf(":");
+  printf("%02X", mac_addr[1]);
+  printf(":");
+  printf("%02X", mac_addr[2]);
+  printf(":");
+  printf("%02X", mac_addr[3]);
+  printf(":");
+  printf("%02X", mac_addr[4]);
+  printf(":");
+  printf("%02X", mac_addr[5]);
 }
 
 void sync_settings(uint32_t t_now) {
@@ -73,7 +73,7 @@ void sync_settings(uint32_t t_now) {
 }
 
 void identify_main_unit() {
-  USBSerial.println("[IDENTIFY MAIN UNIT]");
+  printf("[IDENTIFY MAIN UNIT]\n");
   SB_COMMAND_IDENTIFY_MAIN identify;
 
   const uint8_t *peer_addr = broadcast_peer.peer_addr;
@@ -120,11 +120,11 @@ void on_data_rx(const uint8_t *mac_addr, const uint8_t *incoming_data, int len) 
     uint8_t command_type = incoming_data[4];
 
     if (debug_mode) {
-      USBSerial.print("RX COMMAND OF TYPE ");
-      USBSerial.print(command_type);
-      USBSerial.print(" FROM ");
+      printf("RX COMMAND OF TYPE ");
+      printf("%d", command_type);
+      printf(" FROM ");
       print_mac(mac_addr);
-      USBSerial.println();
+      printf("\n");
     }
 
     if (command_type == COMMAND_SYNC_SETTINGS) {
@@ -160,8 +160,7 @@ void on_data_rx(const uint8_t *mac_addr, const uint8_t *incoming_data, int len) 
   }
   else {
     if (debug_mode) {
-      USBSerial.print("UNKNOWN PACKET:");
-      USBSerial.println(data_type);
+      printf("UNKNOWN PACKET:%s\n", data_type);
     }
   }
 }
@@ -169,8 +168,7 @@ void on_data_rx(const uint8_t *mac_addr, const uint8_t *incoming_data, int len) 
 void init_p2p() {
   WiFi.mode(WIFI_MODE_STA);
 
-  USBSerial.print("ESP-NOW INIT: ");
-  USBSerial.println(esp_err_to_name(esp_now_init()));
+  printf("ESP-NOW INIT: %s\n", esp_err_to_name(esp_now_init()));
 
   esp_now_register_send_cb(on_data_tx);
   esp_now_register_recv_cb(on_data_rx);
@@ -180,8 +178,7 @@ void init_p2p() {
   broadcast_peer.channel = 0; // TODO - avoid broadcast mode to allow for other WIFI channels (Promiscuous only works on channel 0)
   broadcast_peer.encrypt = false;
 
-  USBSerial.print("ESP-NOW ADD BROADCAST PEER: ");
-  USBSerial.println(esp_err_to_name(esp_now_add_peer(&broadcast_peer)));
+  printf("ESP-NOW ADD BROADCAST PEER: %s\n", esp_err_to_name(esp_now_add_peer(&broadcast_peer)));
 }
 
 void run_p2p() {

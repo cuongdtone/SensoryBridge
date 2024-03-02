@@ -10,34 +10,34 @@ extern void reboot();                  // system.h
 
 void tx_begin(bool error = false) {
   if (error == false) {
-    USBSerial.println("sbr{{");
+    printf("sbr{{\n");
   } else {
-    USBSerial.println("sberr[[");
+    printf("sberr[[\n");
   }
 }
 
 void tx_end(bool error = false) {
   if (error == false) {
-    USBSerial.println("}}");
+    printf("}}\n");
   } else {
-    USBSerial.println("]]");
+    printf("]]\n");
   }
 }
 
 void ack() {
-  USBSerial.println("SBOK");
+  printf("SBOK\n");
 }
 
 void bad_command(char* command_type, char* command_data) {
   tx_begin(true);
-  USBSerial.print("Bad command: ");
-  USBSerial.print(command_type);
+  printf("Bad command: ");
+  printf(command_type);
   if (command_data[0] != 0) {
-    USBSerial.print("=");
-    USBSerial.print(command_data);
+    printf("=");
+    printf(command_data);
   }
 
-  USBSerial.println();
+  printf("\n");
   tx_end(true);
 }
 
@@ -68,200 +68,83 @@ void init_serial(uint32_t baud_rate) {
   }
 
   // Print welcome message
-  USBSerial.println("---------------------------");
-  USBSerial.print("SENSORY BRIDGE | VER: ");
-  USBSerial.println(FIRMWARE_VERSION);
-  USBSerial.println("---------------------------");
-  USBSerial.println();
-  USBSerial.print("INIT_SERIAL: ");
-  USBSerial.println(serial_started == true ? PASS : FAIL);
+  printf("---------------------------\n");
+  printf("SENSORY BRIDGE | VER: %d\n", FIRMWARE_VERSION);
+  printf("---------------------------\n\n");
+  printf("INIT_SERIAL: %s\n", serial_started == true ? "PASS" : "FAIL");
 }
 
 // This is for development purposes, and allows the user to dump
 // the current values of many variables to the monitor at once
 void dump_info() {
-  USBSerial.print("FIRMWARE_VERSION: ");
-  USBSerial.println(FIRMWARE_VERSION);
+  printf("FIRMWARE_VERSION: %d\n", FIRMWARE_VERSION);
 
-  USBSerial.print("CHIP ID: ");
+  printf("CHIP ID: ");
   print_chip_id();
 
-  USBSerial.print("noise_button.pressed: ");
-  USBSerial.println(noise_button.pressed);
+  printf("noise_button.pressed: %s\n", noise_button.pressed ? "true" : "false");
+  printf("noise_button.last_down: %lu\n", noise_button.last_down);
+  printf("noise_button.last_up: %lu\n", noise_button.last_up);
+  printf("noise_button.pin: %d\n", noise_button.pin);
 
-  USBSerial.print("noise_button.last_down: ");
-  USBSerial.println(noise_button.last_down);
+  printf("mode_button.pressed: %s\n", mode_button.pressed ? "true" : "false");
+  printf("mode_button.last_down: %lu\n", mode_button.last_down);
+  printf("mode_button.last_up: %lu\n", mode_button.last_up);
+  printf("mode_button.pin: %d\n", mode_button.pin);
 
-  USBSerial.print("noise_button.last_up: ");
-  USBSerial.println(noise_button.last_up);
 
-  USBSerial.print("noise_button.pin: ");
-  USBSerial.println(noise_button.pin);
+  printf("CONFIG.PHOTONS: %.6f\n", CONFIG.PHOTONS);
+  printf("CONFIG.CHROMA: %.6f\n", CONFIG.CHROMA);
+  printf("CONFIG.MOOD: %.6f\n", CONFIG.MOOD);
+  printf("CONFIG.LIGHTSHOW_MODE: %u\n", CONFIG.LIGHTSHOW_MODE);
+  printf("CONFIG.MIRROR_ENABLED: %s\n", CONFIG.MIRROR_ENABLED ? "true" : "false");
+  printf("CONFIG.CHROMAGRAM_RANGE: %u\n", CONFIG.CHROMAGRAM_RANGE);
+  printf("CONFIG.SAMPLE_RATE: %lu\n", CONFIG.SAMPLE_RATE);
+  printf("CONFIG.NOTE_OFFSET: %u\n", CONFIG.NOTE_OFFSET);
+  printf("CONFIG.SQUARE_ITER: %u\n", CONFIG.SQUARE_ITER);
+  printf("CONFIG.LED_TYPE: %u\n", CONFIG.LED_TYPE);
+  printf("CONFIG.LED_COUNT: %u\n", CONFIG.LED_COUNT);
+  printf("CONFIG.LED_COLOR_ORDER: %u\n", CONFIG.LED_COLOR_ORDER);
+  printf("CONFIG.SAMPLES_PER_CHUNK: %u\n", CONFIG.SAMPLES_PER_CHUNK);
+  printf("CONFIG.SENSITIVITY: %.6f\n", CONFIG.SENSITIVITY);
+  printf("CONFIG.BOOT_ANIMATION: %s\n", CONFIG.BOOT_ANIMATION ? "true" : "false");
+  printf("CONFIG.SWEET_SPOT_MIN_LEVEL: %lu\n", CONFIG.SWEET_SPOT_MIN_LEVEL);
+  printf("CONFIG.SWEET_SPOT_MAX_LEVEL: %lu\n", CONFIG.SWEET_SPOT_MAX_LEVEL);
+  printf("CONFIG.DC_OFFSET: %ld\n", CONFIG.DC_OFFSET);
+  printf("CONFIG.STANDBY_DIMMING: %s\n", CONFIG.STANDBY_DIMMING ? "true" : "false");
+  printf("CONFIG.REVERSE_ORDER: %s\n", CONFIG.REVERSE_ORDER ? "true" : "false");
+  printf("CONFIG.IS_MAIN_UNIT: %s\n", CONFIG.IS_MAIN_UNIT ? "true" : "false");
+  printf("CONFIG.MAX_CURRENT_MA: %lu\n", CONFIG.MAX_CURRENT_MA);
+  printf("CONFIG.TEMPORAL_DITHERING: %s\n", CONFIG.TEMPORAL_DITHERING ? "true" : "false");
+  printf("CONFIG.AUTO_COLOR_SHIFT: %s\n", CONFIG.AUTO_COLOR_SHIFT ? "true" : "false");
+  printf("CONFIG.INCANDESCENT_FILTER: %.6f\n", CONFIG.INCANDESCENT_FILTER);
+  printf("CONFIG.INCANDESCENT_MODE: %s\n", CONFIG.INCANDESCENT_MODE ? "true" : "false");
+  printf("CONFIG.BULB_OPACITY: %.6f\n", CONFIG.BULB_OPACITY);
+  printf("CONFIG.SATURATION: %.6f\n", CONFIG.SATURATION);
+  printf("CONFIG.PRISM_COUNT: %u\n", CONFIG.PRISM_COUNT);
+  printf("CONFIG.BASE_COAT: %s\n", CONFIG.BASE_COAT ? "true" : "false");
 
-  USBSerial.print("mode_button.pressed: ");
-  USBSerial.println(mode_button.pressed);
-
-  USBSerial.print("mode_button.last_down: ");
-  USBSerial.println(mode_button.last_down);
-
-  USBSerial.print("mode_button.last_up: ");
-  USBSerial.println(mode_button.last_up);
-
-  USBSerial.print("mode_button.pin: ");
-  USBSerial.println(mode_button.pin);
-
-  USBSerial.print("CONFIG.PHOTONS: ");
-  USBSerial.println(CONFIG.PHOTONS, 6);
-
-  USBSerial.print("CONFIG.CHROMA: ");
-  USBSerial.println(CONFIG.CHROMA, 6);
-
-  USBSerial.print("CONFIG.MOOD: ");
-  USBSerial.println(CONFIG.MOOD, 6);
-
-  USBSerial.print("CONFIG.LIGHTSHOW_MODE: ");
-  USBSerial.println(CONFIG.LIGHTSHOW_MODE);
-
-  USBSerial.print("CONFIG.MIRROR_ENABLED: ");
-  USBSerial.println(CONFIG.MIRROR_ENABLED);
-
-  USBSerial.print("CONFIG.CHROMAGRAM_RANGE: ");
-  USBSerial.println(CONFIG.CHROMAGRAM_RANGE);
-
-  USBSerial.print("CONFIG.SAMPLE_RATE: ");
-  USBSerial.println(CONFIG.SAMPLE_RATE);
-
-  USBSerial.print("CONFIG.NOTE_OFFSET: ");
-  USBSerial.println(CONFIG.NOTE_OFFSET);
-
-  USBSerial.print("CONFIG.SQUARE_ITER: ");
-  USBSerial.println(CONFIG.SQUARE_ITER);
-
-  USBSerial.print("CONFIG.LED_TYPE: ");
-  USBSerial.println(CONFIG.LED_TYPE);
-
-  USBSerial.print("CONFIG.LED_COUNT: ");
-  USBSerial.println(CONFIG.LED_COUNT);
-
-  USBSerial.print("CONFIG.LED_COLOR_ORDER: ");
-  USBSerial.println(CONFIG.LED_COLOR_ORDER);
-
-  USBSerial.print("CONFIG.SAMPLES_PER_CHUNK: ");
-  USBSerial.println(CONFIG.SAMPLES_PER_CHUNK);
-
-  USBSerial.print("CONFIG.SENSITIVITY: ");
-  USBSerial.println(CONFIG.SENSITIVITY, 6);
-
-  USBSerial.print("CONFIG.BOOT_ANIMATION: ");
-  USBSerial.println(CONFIG.BOOT_ANIMATION);
-
-  USBSerial.print("CONFIG.SWEET_SPOT_MIN_LEVEL: ");
-  USBSerial.println(CONFIG.SWEET_SPOT_MIN_LEVEL);
-
-  USBSerial.print("CONFIG.SWEET_SPOT_MAX_LEVEL: ");
-  USBSerial.println(CONFIG.SWEET_SPOT_MAX_LEVEL);
-
-  USBSerial.print("CONFIG.DC_OFFSET: ");
-  USBSerial.println(CONFIG.DC_OFFSET);
-
-  USBSerial.print("CONFIG.STANDBY_DIMMING: ");
-  USBSerial.println(CONFIG.STANDBY_DIMMING);
-
-  USBSerial.print("CONFIG.REVERSE_ORDER: ");
-  USBSerial.println(CONFIG.REVERSE_ORDER);
-
-  USBSerial.print("CONFIG.IS_MAIN_UNIT: ");
-  USBSerial.println(CONFIG.IS_MAIN_UNIT);
-
-  USBSerial.print("CONFIG.MAX_CURRENT_MA: ");
-  USBSerial.println(CONFIG.MAX_CURRENT_MA);
-
-  USBSerial.print("CONFIG.TEMPORAL_DITHERING: ");
-  USBSerial.println(CONFIG.TEMPORAL_DITHERING);
-
-  USBSerial.print("CONFIG.AUTO_COLOR_SHIFT: ");
-  USBSerial.println(CONFIG.AUTO_COLOR_SHIFT);
-
-  USBSerial.print("CONFIG.INCANDESCENT_FILTER: ");
-  USBSerial.println(CONFIG.INCANDESCENT_FILTER);
-
-  USBSerial.print("CONFIG.INCANDESCENT_MODE: ");
-  USBSerial.println(CONFIG.INCANDESCENT_MODE);
-
-  USBSerial.print("CONFIG.BULB_OPACITY: ");
-  USBSerial.println(CONFIG.BULB_OPACITY);
-
-  USBSerial.print("CONFIG.SATURATION: ");
-  USBSerial.println(CONFIG.SATURATION);
-
-  USBSerial.print("CONFIG.PRISM_COUNT: ");
-  USBSerial.println(CONFIG.PRISM_COUNT);
-
-  USBSerial.print("CONFIG.BASE_COAT: ");
-  USBSerial.println(CONFIG.BASE_COAT);
-
-  USBSerial.print("MASTER_BRIGHTNESS: ");
-  USBSerial.println(MASTER_BRIGHTNESS);
-
-  USBSerial.print("stream_audio: ");
-  USBSerial.println(stream_audio);
-
-  USBSerial.print("stream_fps: ");
-  USBSerial.println(stream_fps);
-
-  USBSerial.print("stream_max_mags: ");
-  USBSerial.println(stream_max_mags);
-
-  USBSerial.print("stream_max_mags_followers: ");
-  USBSerial.println(stream_max_mags_followers);
-
-  USBSerial.print("stream_magnitudes: ");
-  USBSerial.println(stream_magnitudes);
-
-  USBSerial.print("stream_spectrogram: ");
-  USBSerial.println(stream_spectrogram);
-
-  USBSerial.print("stream_chromagram: ");
-  USBSerial.println(stream_chromagram);
-
-  USBSerial.print("debug_mode: ");
-  USBSerial.println(debug_mode);
-
-  USBSerial.print("noise_complete: ");
-  USBSerial.println(noise_complete);
-
-  USBSerial.print("noise_iterations: ");
-  USBSerial.println(noise_iterations);
-
-  USBSerial.print("main_override: ");
-  USBSerial.println(main_override);
-
-  USBSerial.print("last_rx_time: ");
-  USBSerial.println(last_rx_time);
-
-  USBSerial.print("next_save_time: ");
-  USBSerial.println(next_save_time);
-
-  USBSerial.print("settings_updated: ");
-  USBSerial.println(settings_updated);
-
-  USBSerial.print("I2S_PORT: ");
-  USBSerial.println(I2S_PORT);
-
-  USBSerial.print("SAMPLE_HISTORY_LENGTH: ");
-  USBSerial.println(SAMPLE_HISTORY_LENGTH);
-
-  USBSerial.print("silence: ");
-  USBSerial.println(silence);
-
-  USBSerial.print("mode_destination: ");
-  USBSerial.println(mode_destination);
-
-  USBSerial.print("SYSTEM_FPS: ");
-  USBSerial.println(SYSTEM_FPS);
-
-  USBSerial.print("LED_FPS: ");
-  USBSerial.println(LED_FPS);
+  printf("MASTER_BRIGHTNESS: %f\n", MASTER_BRIGHTNESS);
+  printf("stream_audio: %s\n", stream_audio ? "true" : "false");
+  printf("stream_fps: %s\n", stream_fps ? "true" : "false");
+  printf("stream_max_mags: %s\n", stream_max_mags ? "true" : "false");
+  printf("stream_max_mags_followers: %s\n", stream_max_mags_followers ? "true" : "false");
+  printf("stream_magnitudes: %s\n", stream_magnitudes ? "true" : "false");
+  printf("stream_spectrogram: %s\n", stream_spectrogram ? "true" : "false");
+  printf("stream_chromagram: %s\n", stream_chromagram ? "true" : "false");
+  printf("debug_mode: %s\n", debug_mode ? "true" : "false");
+  printf("noise_complete: %s\n", noise_complete ? "true" : "false");
+  printf("noise_iterations: %d\n", noise_iterations);
+  printf("main_override: %s\n", main_override ? "true" : "false");
+  printf("last_rx_time: %d\n", last_rx_time);
+  printf("next_save_time: %d\n", next_save_time);
+  printf("settings_updated: %s\n", settings_updated ? "true" : "false");
+  printf("I2S_PORT: %d\n", I2S_PORT);
+  printf("SAMPLE_HISTORY_LENGTH: %d\n", SAMPLE_HISTORY_LENGTH);
+  printf("silence: %s\n", silence ? "true" : "false");
+  printf("mode_destination: %d\n", mode_destination);
+  printf("SYSTEM_FPS: %f\n", SYSTEM_FPS);
+  printf("LED_FPS: %f\n", LED_FPS);
 }
 
 // This parses a completed command to decide how to handle it
@@ -273,8 +156,7 @@ void parse_command(char* command_buf) {
   if (strcmp(command_buf, "v") == 0 || strcmp(command_buf, "V") == 0 || strcmp(command_buf, "version") == 0) {
 
     tx_begin();
-    USBSerial.print("VERSION: ");
-    USBSerial.println(FIRMWARE_VERSION);
+    printf("VERSION: %d\n", FIRMWARE_VERSION);
     tx_end();
 
   }
@@ -283,64 +165,63 @@ void parse_command(char* command_buf) {
   else if (strcmp(command_buf, "h") == 0 || strcmp(command_buf, "H") == 0 || strcmp(command_buf, "help") == 0) {
 
     tx_begin();
-    USBSerial.println("SENSORY BRIDGE - Serial Menu ------------------------------------------------------------------------------------");
-    USBSerial.println();
-    USBSerial.println("                                           v | Print firmware version number");
-    USBSerial.println("                                       reset | Reboot Sensory Bridge");
-    USBSerial.println("                               factory_reset | Delete configuration, including noise cal, reboot");
-    USBSerial.println("                            restore_defaults | Delete configuration, reboot");
-    USBSerial.println("                               get_main_unit | Print if this unit is set to MAIN for SensorySync");
-    USBSerial.println("                                        dump | Print tons of useful variables in realtime");
-    USBSerial.println("                                        stop | Stops the output of any enabled streams");
-    USBSerial.println("                                         fps | Return the system FPS");
-    USBSerial.println("                                     led_fps | Return the LED FPS");
-    USBSerial.println("                                     chip_id | Return the chip id (MAC) of the CPU");
-    USBSerial.println("                                    get_mode | Get lightshow mode's ID (index)");
-    USBSerial.println("                               get_num_modes | Return the number of modes available");
-    USBSerial.println("                             start_noise_cal | Remotely begin a noise calibration");
-    USBSerial.println("                             clear_noise_cal | Remotely clear the stored noise calibration");
-    USBSerial.println("                                    identify | Flashes the LEDs twice in yellow");
-    USBSerial.println("                              set_mode=[int] | Set the mode number");
-    USBSerial.println("         mirror_enabled=[true/false/default] | Remotely toggle lightshow mirroring");
-    USBSerial.println("          reverse_order=[true/false/default] | Toggle whether image is flipped upside down before final rendering");
-    USBSerial.println("                         get_mode_name=[int] | Get a mode's name by ID (index)");
-    USBSerial.println("                               stream=[type] | Stream live data to a Serial Plotter.");
-    USBSerial.println("                                               Options are: audio, fps, magnitudes, spectrogram, chromagram");
-    USBSerial.println("             led_type=['neopixel'/'dotstar'] | Sets which LED protocol to use, 3 wire or 4 wire");
-    USBSerial.println("                led_count=[int or 'default'] | Sets how many LEDs your display will use (native resolution is 128)");
-    USBSerial.println("       led_color_order=[GRB/RGB/BGR/default] | Sets LED color ordering, default GRB");
-    USBSerial.println("      led_interpolation=[true/false/default] | Toggles linear LED interpolation when running in a non-native resolution (slower)");
-    USBSerial.println("                          debug=[true/false] | Enables debug mode, where functions are timed");
-    USBSerial.println("               sample_rate=[hz or 'default'] | Sets the microphone sample rate");
-    USBSerial.println("             note_offset=[0-32 or 'default'] | Sets the lowest note, as a positive offset from A1 (55.0Hz)");
-    USBSerial.println("              square_iter=[int or 'default'] | Sets the number of times the LED output is squared (contrast)");
-    USBSerial.println("        samples_per_chunk=[int or 'default'] | Sets the number of samples collected every frame");
-    USBSerial.println("            sensitivity=[float or 'default'] | Sets the scaling of audio data (>1.0 is more sensitive, <1.0 is less sensitive)");
-    USBSerial.println("         boot_animation=[true/false/default] | Enable or disable the boot animation");
-    USBSerial.println("                  set_main_unit=[true/false] | Sets if this unit is MAIN or not for SensorySync");
-    USBSerial.println("           sweet_spot_min=[int or 'default'] | Sets the minimum amplitude to be inside the 'Sweet Spot'");
-    USBSerial.println("           sweet_spot_max=[int or 'default'] | Sets the maximum amplitude to be inside the 'Sweet Spot'");
-    USBSerial.println("        chromagram_range=[1-64 or 'default'] | Range between 1 and 64, how many notes at the bottom of the");
-    USBSerial.println("                                               spectrogram should be considered in chromagram sums");
-    USBSerial.println("        standby_dimming=[true/false/default] | Toggle dimming during detected silence");
-    USBSerial.println("                      bass_mode=[true/false] | Toggle bass-mode, which alters note_offset and chromagram_range for bass-y tunes");
-    USBSerial.println("           max_current_ma=[int or 'default'] | Sets the maximum current FastLED will attempt to limit the LED consumption to");
-    USBSerial.println("     temporal_dithering=[true/false/default] | Toggle per-LED temporal dithering that simulates higher bit-depths");
-    USBSerial.println("       auto_color_shift=[true/false/default] | Toggle automated color shifting based on positive spectral changes");
-    USBSerial.println("    incandescent_filter=[float or 'default'] | Set the intensity of the incandescent LUT (reduces harsh blues)");
-    USBSerial.println("      incandescent_mode=[true/false/default] | Force all output into monochrome and tint with 2700K incandescent color");
-    USBSerial.println("              base_coat=[true/false/default] | Enable a dim gray backdrop to the LEDs (approves appearance in most modes)");
-    USBSerial.println("           bulb_opacity=[float or 'default'] | Set opacity of a filter that portrays the output as 32 \"bulbs\" with separation and hot spots");
-    USBSerial.println("             saturation=[float or 'default'] | Sets the saturation of internal hues");
-    USBSerial.println("              prism_count=[int or 'default'] | Sets the number of times the \"prism\" effect is applied");
-    USBSerial.println("                        preset=[preset_name] | Sets multiple configuration options at once to match a preset theme");
+    printf("SENSORY BRIDGE - Serial Menu ------------------------------------------------------------------------------------\n\n");
+    printf("                                           v | Print firmware version number\n");
+    printf("                                       reset | Reboot Sensory Bridge\n");
+    printf("                               factory_reset | Delete configuration, including noise cal, reboot\n");
+    printf("                            restore_defaults | Delete configuration, reboot\n");
+    printf("                               get_main_unit | Print if this unit is set to MAIN for SensorySync\n");
+    printf("                                        dump | Print tons of useful variables in realtime\n");
+    printf("                                        stop | Stops the output of any enabled streams\n");
+    printf("                                         fps | Return the system FPS\n");
+    printf("                                     led_fps | Return the LED FPS\n");
+    printf("                                     chip_id | Return the chip id (MAC) of the CPU\n");
+    printf("                                    get_mode | Get lightshow mode's ID (index)\n");
+    printf("                               get_num_modes | Return the number of modes available\n");
+    printf("                             start_noise_cal | Remotely begin a noise calibration\n");
+    printf("                             clear_noise_cal | Remotely clear the stored noise calibration\n");
+    printf("                                    identify | Flashes the LEDs twice in yellow\n");
+    printf("                              set_mode=[int] | Set the mode number\n");
+    printf("         mirror_enabled=[true/false/default] | Remotely toggle lightshow mirroring\n");
+    printf("          reverse_order=[true/false/default] | Toggle whether image is flipped upside down before final rendering\n");
+    printf("                         get_mode_name=[int] | Get a mode's name by ID (index)\n");
+    printf("                               stream=[type] | Stream live data to a Serial Plotter.\n");
+    printf("                                               Options are: audio, fps, magnitudes, spectrogram, chromagram\n");
+    printf("             led_type=['neopixel'/'dotstar'] | Sets which LED protocol to use, 3 wire or 4 wire\n");
+    printf("                led_count=[int or 'default'] | Sets how many LEDs your display will use (native resolution is 128)\n");
+    printf("       led_color_order=[GRB/RGB/BGR/default] | Sets LED color ordering, default GRB\n");
+    printf("      led_interpolation=[true/false/default] | Toggles linear LED interpolation when running in a non-native resolution (slower)\n");
+    printf("                          debug=[true/false] | Enables debug mode, where functions are timed\n");
+    printf("               sample_rate=[hz or 'default'] | Sets the microphone sample rate\n");
+    printf("             note_offset=[0-32 or 'default'] | Sets the lowest note, as a positive offset from A1 (55.0Hz)\n");
+    printf("              square_iter=[int or 'default'] | Sets the number of times the LED output is squared (contrast)\n");
+    printf("        samples_per_chunk=[int or 'default'] | Sets the number of samples collected every frame\n");
+    printf("            sensitivity=[float or 'default'] | Sets the scaling of audio data (>1.0 is more sensitive, <1.0 is less sensitive)\n");
+    printf("         boot_animation=[true/false/default] | Enable or disable the boot animation\n");
+    printf("                  set_main_unit=[true/false] | Sets if this unit is MAIN or not for SensorySync\n");
+    printf("           sweet_spot_min=[int or 'default'] | Sets the minimum amplitude to be inside the 'Sweet Spot'\n");
+    printf("           sweet_spot_max=[int or 'default'] | Sets the maximum amplitude to be inside the 'Sweet Spot'\n");
+    printf("        chromagram_range=[1-64 or 'default'] | Range between 1 and 64, how many notes at the bottom of the\n");
+    printf("                                               spectrogram should be considered in chromagram sums\n");
+    printf("        standby_dimming=[true/false/default] | Toggle dimming during detected silence\n");
+    printf("                      bass_mode=[true/false] | Toggle bass-mode, which alters note_offset and chromagram_range for bass-y tunes\n");
+    printf("           max_current_ma=[int or 'default'] | Sets the maximum current FastLED will attempt to limit the LED consumption to\n");
+    printf("     temporal_dithering=[true/false/default] | Toggle per-LED temporal dithering that simulates higher bit-depths\n");
+    printf("       auto_color_shift=[true/false/default] | Toggle automated color shifting based on positive spectral changes\n");
+    printf("    incandescent_filter=[float or 'default'] | Set the intensity of the incandescent LUT (reduces harsh blues)\n");
+    printf("      incandescent_mode=[true/false/default] | Force all output into monochrome and tint with 2700K incandescent color\n");
+    printf("              base_coat=[true/false/default] | Enable a dim gray backdrop to the LEDs (approves appearance in most modes)\n");
+    printf("           bulb_opacity=[float or 'default'] | Set opacity of a filter that portrays the output as 32 \"bulbs\" with separation and hot spots\n");
+    printf("             saturation=[float or 'default'] | Sets the saturation of internal hues\n");
+    printf("              prism_count=[int or 'default'] | Sets the number of times the \"prism\" effect is applied\n");
+    printf("                        preset=[preset_name] | Sets multiple configuration options at once to match a preset theme\n");
     tx_end();
   }
 
   // So that software can automatically identify this device -
   else if (strcmp(command_buf, "SB?") == 0) {
 
-    USBSerial.println("SB!");
+    printf("SB!\n");
 
   }
 
@@ -406,8 +287,7 @@ void parse_command(char* command_buf) {
   else if (strcmp(command_buf, "get_num_modes") == 0) {
 
     tx_begin();
-    USBSerial.print("NUM_MODES: ");
-    USBSerial.println(NUM_MODES);
+    printf("NUM_MODES: %d\n", NUM_MODES);
     tx_end();
 
   }
@@ -416,8 +296,7 @@ void parse_command(char* command_buf) {
   else if (strcmp(command_buf, "get_mode") == 0) {
 
     tx_begin();
-    USBSerial.print("MODE: ");
-    USBSerial.println(CONFIG.LIGHTSHOW_MODE);
+    printf("MODE: %d\n", CONFIG.LIGHTSHOW_MODE);
     tx_end();
 
   }
@@ -426,8 +305,7 @@ void parse_command(char* command_buf) {
   else if (strcmp(command_buf, "get_main_unit") == 0) {
 
     tx_begin();
-    USBSerial.print("CONFIG.IS_MAIN_UNIT: ");
-    USBSerial.println(CONFIG.IS_MAIN_UNIT);
+    printf("CONFIG.IS_MAIN_UNIT: %s\n", CONFIG.IS_MAIN_UNIT ? "true" : "false");
     tx_end();
 
   }
@@ -437,37 +315,37 @@ void parse_command(char* command_buf) {
     tx_begin();
     switch (esp_reset_reason()) {
       case ESP_RST_UNKNOWN:
-        USBSerial.println("UNKNOWN");
+        printf("UNKNOWN\n");
         break;
       case ESP_RST_POWERON:
-        USBSerial.println("POWERON");
+        printf("POWERON\n");
         break;
       case ESP_RST_EXT:
-        USBSerial.println("EXTERNAL");
+        printf("EXTERNAL\n");
         break;
       case ESP_RST_SW:
-        USBSerial.println("SOFTWARE");
+        printf("SOFTWARE\n");
         break;
       case ESP_RST_PANIC:
-        USBSerial.println("PANIC");
+        printf("PANIC\n");
         break;
       case ESP_RST_INT_WDT:
-        USBSerial.println("INTERNAL WATCHDOG");
+        printf("INTERNAL WATCHDOG\n");
         break;
       case ESP_RST_TASK_WDT:
-        USBSerial.println("TASK WATCHDOG");
+        printf("TASK WATCHDOG\n");
         break;
       case ESP_RST_WDT:
-        USBSerial.println("WATCHDOG");
+        printf("WATCHDOG\n");
         break;
       case ESP_RST_DEEPSLEEP:
-        USBSerial.println("DEEPSLEEP");
+        printf("DEEPSLEEP\n");
         break;
       case ESP_RST_BROWNOUT:
-        USBSerial.println("BROWNOUT");
+        printf("BROWNOUT\n");
         break;
       case ESP_RST_SDIO:
-        USBSerial.println("SDIO");
+        printf("SDIO\n");
         break;
     }
     tx_end();
@@ -494,8 +372,7 @@ void parse_command(char* command_buf) {
   else if (strcmp(command_buf, "fps") == 0) {
 
     tx_begin();
-    USBSerial.print("SYSTEM_FPS: ");
-    USBSerial.println(SYSTEM_FPS);
+    printf("SYSTEM_FPS: %f\n", SYSTEM_FPS);
     tx_end();
 
   }
@@ -504,64 +381,22 @@ void parse_command(char* command_buf) {
   else if (strcmp(command_buf, "led_fps") == 0) {
 
     tx_begin();
-    USBSerial.print("LED_FPS: ");
-    USBSerial.println(LED_FPS);
+    printf("LED_FPS: %f\n", LED_FPS);
     tx_end();
 
   }
 
   // Print the knob values ----------------------------------
   else if (strcmp(command_buf, "get_knobs") == 0) {
-
-    USBSerial.print("{");
-
-    USBSerial.print('"');
-    USBSerial.print("PHOTONS");
-    USBSerial.print('"');
-    USBSerial.print(':');
-    USBSerial.print(CONFIG.PHOTONS);
-
-    USBSerial.print(',');
-
-    USBSerial.print('"');
-    USBSerial.print("CHROMA");
-    USBSerial.print('"');
-    USBSerial.print(':');
-    USBSerial.print(CONFIG.CHROMA);
-
-    USBSerial.print(',');
-
-    USBSerial.print('"');
-    USBSerial.print("MOOD");
-    USBSerial.print('"');
-    USBSerial.print(':');
-    USBSerial.print(CONFIG.MOOD);
-
-    USBSerial.println('}');
-
+    printf("{\"PHOTONS\":%f,", CONFIG.PHOTONS);
+    printf("\"CHROMA\":%f,", CONFIG.CHROMA);
+    printf("\"MOOD\":%f}\n", CONFIG.MOOD);
   }
 
   // Print the button values --------------------------------
   else if (strcmp(command_buf, "get_buttons") == 0) {
-
-    USBSerial.print("{");
-
-    USBSerial.print('"');
-    USBSerial.print("NOISE");
-    USBSerial.print('"');
-    USBSerial.print(':');
-    USBSerial.print(digitalRead(noise_button.pin));
-
-    USBSerial.print(',');
-
-    USBSerial.print('"');
-    USBSerial.print("MODE");
-    USBSerial.print('"');
-    USBSerial.print(':');
-    USBSerial.print(digitalRead(mode_button.pin));
-
-    USBSerial.println('}');
-
+    printf("{\"NOISE\":%d,", digitalRead(noise_button.pin));
+    printf("\"MODE\":%d}\n", digitalRead(mode_button.pin));
   }
 
   // COMMANDS WITH METADATA ##################################
@@ -611,8 +446,7 @@ void parse_command(char* command_buf) {
         save_config();
 
         tx_begin();
-        USBSerial.print("CONFIG.IS_MAIN_UNIT: ");
-        USBSerial.println(CONFIG.IS_MAIN_UNIT);
+        printf("CONFIG.IS_MAIN_UNIT: %s\n", CONFIG.IS_MAIN_UNIT ? "true" : "false");
         tx_end();
 
         reboot();
@@ -636,8 +470,7 @@ void parse_command(char* command_buf) {
 
       if (good) {
         tx_begin();
-        USBSerial.print("debug_mode: ");
-        USBSerial.println(debug_mode);
+        printf("debug_mode: %s\n", debug_mode ? "true" : "false");
         tx_end();
       }
     }
@@ -656,8 +489,7 @@ void parse_command(char* command_buf) {
       if (good) {
         save_config();
         tx_begin();
-        USBSerial.print("CONFIG.SAMPLE_RATE: ");
-        USBSerial.println(CONFIG.SAMPLE_RATE);
+        printf("CONFIG.SAMPLE_RATE: %d\n", CONFIG.SAMPLE_RATE);
         tx_end();
         reboot();
       }
@@ -670,8 +502,7 @@ void parse_command(char* command_buf) {
 
       save_config_delayed();
       tx_begin();
-      USBSerial.print("CONFIG.LIGHTSHOW_MODE: ");
-      USBSerial.println(mode_destination);
+      printf("CONFIG.LIGHTSHOW_MODE: %d\n", mode_destination);
       tx_end();
     }
 
@@ -691,8 +522,7 @@ void parse_command(char* command_buf) {
         }
 
         tx_begin();
-        USBSerial.print("MODE_NAME: ");
-        USBSerial.println(buf);
+        printf("MODE_NAME: %s\n", buf);
         tx_end();
       } else {
         bad_command(command_type, command_data);
@@ -708,8 +538,7 @@ void parse_command(char* command_buf) {
       }
       save_config();
       tx_begin();
-      USBSerial.print("CONFIG.NOTE_OFFSET: ");
-      USBSerial.println(CONFIG.NOTE_OFFSET);
+      printf("CONFIG.NOTE_OFFSET: %d\n", CONFIG.NOTE_OFFSET);
       tx_end();
       reboot();
     }
@@ -724,8 +553,7 @@ void parse_command(char* command_buf) {
       save_config_delayed();
 
       tx_begin();
-      USBSerial.print("CONFIG.SQUARE_ITER: ");
-      USBSerial.println(CONFIG.SQUARE_ITER);
+      printf("CONFIG.SQUARE_ITER: %d\n", CONFIG.SQUARE_ITER);
       tx_end();
     }
 
@@ -747,8 +575,7 @@ void parse_command(char* command_buf) {
       if (good) {
         save_config();
         tx_begin();
-        USBSerial.print("CONFIG.LED_TYPE: ");
-        USBSerial.println(CONFIG.LED_TYPE);
+        printf("CONFIG.LED_TYPE: %d\n", CONFIG.LED_TYPE);
         tx_end();
         reboot();
       }
@@ -764,8 +591,7 @@ void parse_command(char* command_buf) {
 
       save_config();
       tx_begin();
-      USBSerial.print("CONFIG.LED_COUNT: ");
-      USBSerial.println(CONFIG.LED_COUNT);
+      printf("CONFIG.LED_COUNT: %d\n", CONFIG.LED_COUNT);
       tx_end();
       reboot();
     }
@@ -789,8 +615,7 @@ void parse_command(char* command_buf) {
       if (good) {
         save_config_delayed();
         tx_begin();
-        USBSerial.print("CONFIG.LED_INTERPOLATION: ");
-        USBSerial.println(CONFIG.LED_INTERPOLATION);
+        printf("CONFIG.LED_INTERPOLATION: %s\n", CONFIG.LED_INTERPOLATION ? "true" : "false");
         tx_end();
       }
     }
@@ -814,8 +639,7 @@ void parse_command(char* command_buf) {
       if (good) {
         save_config_delayed();
         tx_begin();
-        USBSerial.print("CONFIG.BASE_COAT: ");
-        USBSerial.println(CONFIG.BASE_COAT);
+        printf("CONFIG.BASE_COAT: %s\n", CONFIG.BASE_COAT ? "true" : "false");
         tx_end();
       }
     }
@@ -839,8 +663,7 @@ void parse_command(char* command_buf) {
       if (good) {
         save_config_delayed();
         tx_begin();
-        USBSerial.print("CONFIG.TEMPORAL_DITHERING: ");
-        USBSerial.println(CONFIG.TEMPORAL_DITHERING);
+        printf("CONFIG.TEMPORAL_DITHERING: %s\n", CONFIG.TEMPORAL_DITHERING ? "true" : "false");
         tx_end();
       }
     }
@@ -867,8 +690,7 @@ void parse_command(char* command_buf) {
       if (good) {
         save_config();
         tx_begin();
-        USBSerial.print("CONFIG.LED_COLOR_ORDER: ");
-        USBSerial.println(CONFIG.LED_COLOR_ORDER);
+        printf("CONFIG.LED_COLOR_ORDER: %d\n", CONFIG.LED_COLOR_ORDER);
         tx_end();
         reboot();
       }
@@ -884,8 +706,7 @@ void parse_command(char* command_buf) {
 
       save_config();
       tx_begin();
-      USBSerial.print("CONFIG.SAMPLES_PER_CHUNK: ");
-      USBSerial.println(CONFIG.SAMPLES_PER_CHUNK);
+      printf("CONFIG.SAMPLES_PER_CHUNK: %d\n", CONFIG.SAMPLES_PER_CHUNK);
       tx_end();
       reboot();
     }
@@ -900,8 +721,7 @@ void parse_command(char* command_buf) {
 
       save_config_delayed();
       tx_begin();
-      USBSerial.print("CONFIG.SENSITIVITY: ");
-      USBSerial.println(CONFIG.SENSITIVITY);
+      printf("CONFIG.SENSITIVITY: %f\n", CONFIG.SENSITIVITY);
       tx_end();
     }
 
@@ -924,8 +744,7 @@ void parse_command(char* command_buf) {
       if (good) {
         save_config();
         tx_begin();
-        USBSerial.print("CONFIG.BOOT_ANIMATION: ");
-        USBSerial.println(CONFIG.BOOT_ANIMATION);
+        printf("CONFIG.BOOT_ANIMATION: %s\n", CONFIG.BOOT_ANIMATION ? "true" : "false");
         tx_end();
         reboot();
       }
@@ -950,8 +769,7 @@ void parse_command(char* command_buf) {
       if (good) {
         save_config_delayed();
         tx_begin();
-        USBSerial.print("CONFIG.MIRROR_ENABLED: ");
-        USBSerial.println(CONFIG.MIRROR_ENABLED);
+        printf("CONFIG.MIRROR_ENABLED: %s\n", CONFIG.MIRROR_ENABLED ? "true" : "false");
         tx_end();
       }
     }
@@ -966,8 +784,7 @@ void parse_command(char* command_buf) {
 
       save_config_delayed();
       tx_begin();
-      USBSerial.print("CONFIG.SWEET_SPOT_MIN_LEVEL: ");
-      USBSerial.println(CONFIG.SWEET_SPOT_MIN_LEVEL);
+      printf("CONFIG.SWEET_SPOT_MIN_LEVEL: %d\n", CONFIG.SWEET_SPOT_MIN_LEVEL);
       tx_end();
     }
 
@@ -981,8 +798,7 @@ void parse_command(char* command_buf) {
 
       save_config_delayed();
       tx_begin();
-      USBSerial.print("CONFIG.SWEET_SPOT_MAX_LEVEL: ");
-      USBSerial.println(CONFIG.SWEET_SPOT_MAX_LEVEL);
+      printf("CONFIG.SWEET_SPOT_MAX_LEVEL: %d\n", CONFIG.SWEET_SPOT_MAX_LEVEL);
       tx_end();
     }
 
@@ -996,8 +812,7 @@ void parse_command(char* command_buf) {
 
       save_config_delayed();
       tx_begin();
-      USBSerial.print("CONFIG.CHROMAGRAM_RANGE: ");
-      USBSerial.println(CONFIG.CHROMAGRAM_RANGE);
+      printf("CONFIG.CHROMAGRAM_RANGE: %d\n", CONFIG.CHROMAGRAM_RANGE);
       tx_end();
     }
 
@@ -1020,8 +835,7 @@ void parse_command(char* command_buf) {
       if (good) {
         save_config_delayed();
         tx_begin();
-        USBSerial.print("CONFIG.STANDBY_DIMMING: ");
-        USBSerial.println(CONFIG.STANDBY_DIMMING);
+        printf("CONFIG.STANDBY_DIMMING: %d\n", CONFIG.STANDBY_DIMMING);
         tx_end();
       }
     }
@@ -1044,7 +858,7 @@ void parse_command(char* command_buf) {
       if (good) {
         save_config();
         tx_begin();
-        USBSerial.println("BASS MODE ENABLED");
+        printf("BASS MODE ENABLED\n");
         tx_end();
         reboot();
       }
@@ -1069,8 +883,7 @@ void parse_command(char* command_buf) {
       if (good) {
         save_config_delayed();
         tx_begin();
-        USBSerial.print("CONFIG.REVERSE_ORDER: ");
-        USBSerial.println(CONFIG.REVERSE_ORDER);
+        printf("CONFIG.REVERSE_ORDER: %d\n", CONFIG.REVERSE_ORDER);
         tx_end();
       }
     }
@@ -1087,8 +900,7 @@ void parse_command(char* command_buf) {
 
       save_config_delayed();
       tx_begin();
-      USBSerial.print("CONFIG.MAX_CURRENT_MA: ");
-      USBSerial.println(CONFIG.MAX_CURRENT_MA);
+      printf("CONFIG.MAX_CURRENT_MA: %d\n", CONFIG.MAX_CURRENT_MA);
       tx_end();
     }
 
@@ -1140,8 +952,7 @@ void parse_command(char* command_buf) {
       if (good) {
         save_config_delayed();
         tx_begin();
-        USBSerial.print("CONFIG.AUTO_COLOR_SHIFT: ");
-        USBSerial.println(CONFIG.AUTO_COLOR_SHIFT);
+        printf("CONFIG.AUTO_COLOR_SHIFT: %s\n", CONFIG.AUTO_COLOR_SHIFT ? "true" : "false");
         tx_end();
       }
     }
@@ -1161,8 +972,7 @@ void parse_command(char* command_buf) {
 
       save_config_delayed();
       tx_begin();
-      USBSerial.print("CONFIG.INCANDESCENT_FILTER: ");
-      USBSerial.println(CONFIG.INCANDESCENT_FILTER);
+      printf("CONFIG.INCANDESCENT_FILTER: %f\n", CONFIG.INCANDESCENT_FILTER);
       tx_end();
     }
 
@@ -1185,8 +995,7 @@ void parse_command(char* command_buf) {
       if (good) {
         save_config_delayed();
         tx_begin();
-        USBSerial.print("CONFIG.INCANDESCENT_MODE: ");
-        USBSerial.println(CONFIG.INCANDESCENT_MODE);
+        printf("CONFIG.INCANDESCENT_MODE: %s\n", CONFIG.INCANDESCENT_MODE ? "true" : "false");
         tx_end();
       }
     }
@@ -1206,8 +1015,7 @@ void parse_command(char* command_buf) {
 
       save_config_delayed();
       tx_begin();
-      USBSerial.print("CONFIG.BULB_OPACITY: ");
-      USBSerial.println(CONFIG.BULB_OPACITY);
+      printf("CONFIG.BULB_OPACITY: %f\n", CONFIG.BULB_OPACITY);
       tx_end();
     }
 
@@ -1226,8 +1034,7 @@ void parse_command(char* command_buf) {
 
       save_config_delayed();
       tx_begin();
-      USBSerial.print("CONFIG.SATURATION: ");
-      USBSerial.println(CONFIG.SATURATION);
+      printf("CONFIG.SATURATION: %f\n", CONFIG.SATURATION);
       tx_end();
     }
 
@@ -1245,8 +1052,7 @@ void parse_command(char* command_buf) {
       if (good) {
         save_config();
         tx_begin();
-        USBSerial.print("CONFIG.PRISM_COUNT: ");
-        USBSerial.println(CONFIG.PRISM_COUNT);
+        printf("CONFIG.PRISM_COUNT: %d\n", CONFIG.PRISM_COUNT);
         tx_end();
       }
     }
@@ -1270,8 +1076,7 @@ void parse_command(char* command_buf) {
 
         save_config_delayed();
         tx_begin();
-        USBSerial.print("ENABLED PRESET: ");
-        USBSerial.println(command_data);
+        printf("ENABLED PRESET: %s\n", command_data);
         tx_end();
       }
     }

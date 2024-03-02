@@ -4,7 +4,7 @@ extern void show_leds();
 
 void reboot() {
   led_thread_halt = true;
-  USBSerial.println("--- ! REBOOTING to apply changes (You may need to restart the Serial Monitor)");
+  printf("--- ! REBOOTING to apply changes (You may need to restart the Serial Monitor)\n");
   USBSerial.flush();
   for(float i = 1.0; i >= 0.0; i-=0.05){
     MASTER_BRIGHTNESS = i;
@@ -18,8 +18,8 @@ void reboot() {
 }
 
 void start_timing(char* func_name) {
-  USBSerial.print(func_name);
-  USBSerial.print(": ");
+  printf(func_name);
+  printf(": ");
   USBSerial.flush();
   timing_start = micros();
 }
@@ -28,9 +28,9 @@ void end_timing() {
   uint32_t timing_end = micros();
   uint32_t t_delta = timing_end - timing_start;
 
-  USBSerial.print("DONE IN ");
-  USBSerial.print(t_delta / 1000.0, 3);
-  USBSerial.println(" MS");
+  printf("DONE IN ");
+  printf("%f", t_delta / 1000.0, 3);
+  printf(" MS\n");
 }
 
 void check_current_function() {
@@ -259,12 +259,9 @@ void debug_function_timing(uint32_t t_now) {
   static uint32_t last_timing_print = t_now;
 
   if (t_now - last_timing_print >= 30000) {
-    USBSerial.println("------------");
+    printf("------------\n");
     for (uint8_t i = 0; i < 16; i++) {
-      USBSerial.print(i);
-      USBSerial.print(": ");
-      USBSerial.println(function_hits[i]);
-
+      printf("%d: %d\n", i, function_hits[i]);
       function_hits[i] = 0;
     }
 
@@ -280,6 +277,7 @@ void set_mode_name(uint16_t index, char* mode_name) {
 }
 
 void init_system() {
+  printf("init_system\n");
   noise_button.pin = NOISE_CAL_PIN;
   mode_button.pin = MODE_PIN;
 
@@ -318,7 +316,7 @@ void init_system() {
   generate_window_lookup();
   precompute_goertzel_constants();
 
-  USBSerial.println("SYSTEM INIT COMPLETE!");
+  printf("SYSTEM INIT COMPLETE!\n");
 
   if (CONFIG.BOOT_ANIMATION == true) {
     intro_animation();
@@ -348,9 +346,9 @@ void log_fps(uint32_t t_now_us) {
   SYSTEM_FPS = fps_sum / 10.0;
 
   if (stream_fps == true) {
-    USBSerial.print("sbs((fps=");
-    USBSerial.print(SYSTEM_FPS);
-    USBSerial.println("))");
+    printf("sbs((fps=");
+    printf("%f", SYSTEM_FPS);
+    printf("))\n");
   }
 
   t_last = t_now_us;
@@ -366,7 +364,7 @@ void check_settings(uint32_t t_now) {
   if (settings_updated) {
     if (t_now >= next_save_time) {
       if(debug_mode == true){
-        USBSerial.println("QUEUED CONFIG SAVE TRIGGERED");
+        printf("QUEUED CONFIG SAVE TRIGGERED\n");
       }
       save_config();
       settings_updated = false;
