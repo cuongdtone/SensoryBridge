@@ -3,18 +3,21 @@
   ----------------------------------------*/
 
 #include <driver/i2s.h>
+#include "soc/i2s_reg.h"
 
 const i2s_config_t i2s_config = { // Many of these settings are defined in (constants.h)
   .mode = i2s_mode_t(I2S_MODE_MASTER | I2S_MODE_RX),
   .sample_rate = CONFIG.SAMPLE_RATE,
   .bits_per_sample = I2S_BITS_PER_SAMPLE_32BIT,
-  .channel_format = I2S_CHANNEL_FMT_ONLY_RIGHT,
+  .channel_format = I2S_CHANNEL_FMT_ONLY_RIGHT,  // I2S_CHANNEL_FMT_RIGHT_LEFT -> noise supression ? 
   .communication_format = (i2s_comm_format_t) (I2S_COMM_FORMAT_I2S | I2S_COMM_FORMAT_I2S_MSB),
   .dma_buf_count = 2,
   .dma_buf_len = CONFIG.SAMPLES_PER_CHUNK
 };
 
+// memset(&i2s_config, 0, sizeof(i2s_config_t));
 const i2s_pin_config_t pin_config = { // These too
+  .mck_io_num   = I2S_MCLK_PIN,
   .bck_io_num   = I2S_BCLK_PIN,
   .ws_io_num    = I2S_LRCLK_PIN,
   .data_out_num = -1,  // not used (only for outputs)
@@ -27,11 +30,11 @@ void init_i2s() {
   USBSerial.print("INIT I2S: ");
   USBSerial.println(result == ESP_OK ? PASS : FAIL);
 
-  // ESP32-S2 changes to help SPH0645 mic
-#if defined(CONFIG_IDF_TARGET_ESP32S2)
-  REG_SET_BIT(I2S_TIMING_REG(I2S_PORT), BIT(9));
-  REG_SET_BIT(I2S_CONF_REG(I2S_PORT), I2S_RX_MSB_SHIFT);
-#endif
+  // ESP32-S3 changes to help ES7210 mic
+// #if defined(CONFIG_IDF_TARGET_ESP32S3)
+//   REG_SET_BIT(I2S_TIMING_REG(I2S_PORT), BIT(9));
+//   REG_SET_BIT(I2S_CONF_REG(I2S_PORT), I2S_RX_MSB_SHIFT);
+// #endif
 
   // Set I2S pins
   result = i2s_set_pin(I2S_PORT, &pin_config);

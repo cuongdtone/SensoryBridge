@@ -9,7 +9,7 @@
 #define NUM_FREQS 64
 #define NUM_ZONES 2
 
-#define I2S_PORT I2S_NUM_0
+#define I2S_PORT I2S_NUM_1
 
 #define SPECTRAL_HISTORY_LENGTH 5
 
@@ -70,9 +70,10 @@ const float notes[] = {
 #define CHROMA_PIN 2
 #define MOOD_PIN 3
 
-#define I2S_BCLK_PIN 33
-#define I2S_LRCLK_PIN 34
-#define I2S_DIN_PIN 35
+#define I2S_BCLK_PIN 34
+#define I2S_LRCLK_PIN 33
+#define I2S_DIN_PIN 14
+#define I2S_MCLK_PIN 0
 
 #define LED_DATA_PIN 36
 #define LED_CLOCK_PIN 37
