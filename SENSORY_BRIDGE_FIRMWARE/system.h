@@ -1,6 +1,25 @@
+#include <M5Unified.h>
+
 uint32_t timing_start = 0;
 extern void run_sweet_spot();
 extern void show_leds();
+
+void init_log() {
+  M5.begin();
+
+  M5.setLogDisplayIndex(0);
+
+  M5.Display.setTextWrap(true, true);
+
+  M5.Log.setLogLevel(m5::log_target_serial, ESP_LOG_DEBUG);
+  M5.Log.setLogLevel(m5::log_target_display, ESP_LOG_DEBUG);
+
+  M5.Log.setEnableColor(m5::log_target_serial, true);
+  M5.Log.setEnableColor(m5::log_target_display, true);
+  // M5.Log.setSuffix(m5::log_target_serial, "\n");
+  // M5.Log.setSuffix(m5::log_target_display, "\n");
+  M5.update();
+}
 
 void reboot() {
   led_thread_halt = true;
@@ -18,8 +37,7 @@ void reboot() {
 }
 
 void start_timing(char* func_name) {
-  printf(func_name);
-  printf(": ");
+  M5.Log(ESP_LOG_INFO    , "%s:", func_name);
   USBSerial.flush();
   timing_start = micros();
 }
@@ -28,9 +46,7 @@ void end_timing() {
   uint32_t timing_end = micros();
   uint32_t t_delta = timing_end - timing_start;
 
-  printf("DONE IN ");
-  printf("%f", t_delta / 1000.0, 3);
-  printf(" MS\n");
+  M5.Log(ESP_LOG_INFO    , "DONE IN %fMS", t_delta / 1000.0);
 }
 
 void check_current_function() {
@@ -277,7 +293,6 @@ void set_mode_name(uint16_t index, char* mode_name) {
 }
 
 void init_system() {
-  printf("init_system\n");
   noise_button.pin = NOISE_CAL_PIN;
   mode_button.pin = MODE_PIN;
 
@@ -303,7 +318,7 @@ void init_system() {
   }
 
   init_leds();
-  init_usb();
+  // init_usb();
 
   // MODE held down on boot
   if (digitalRead(mode_button.pin) == LOW) {
@@ -316,7 +331,7 @@ void init_system() {
   generate_window_lookup();
   precompute_goertzel_constants();
 
-  printf("SYSTEM INIT COMPLETE!\n");
+  M5.Log(ESP_LOG_INFO, "\nSYSTEM INIT COMPLETE!");
 
   if (CONFIG.BOOT_ANIMATION == true) {
     intro_animation();

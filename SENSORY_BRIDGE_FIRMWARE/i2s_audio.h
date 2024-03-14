@@ -27,18 +27,11 @@ const i2s_pin_config_t pin_config = { // These too
 void init_i2s() {
   // Init I2S Driver
   esp_err_t result = i2s_driver_install(I2S_PORT, &i2s_config, 0, NULL);
-  printf("INIT I2S: ");
-  printf("%s\n", result == ESP_OK ? PASS : FAIL);
-
-  // ESP32-S3 changes to help ES7210 mic
-// #if defined(CONFIG_IDF_TARGET_ESP32S3)
-//   REG_SET_BIT(I2S_TIMING_REG(I2S_PORT), BIT(9));
-//   REG_SET_BIT(I2S_CONF_REG(I2S_PORT), I2S_RX_MSB_SHIFT);
-// #endif
+  M5.Log(ESP_LOG_INFO    , "INIT I2S: %s", result == ESP_OK ? PASS : FAIL);
 
   // Set I2S pins
   result = i2s_set_pin(I2S_PORT, &pin_config);
-  printf("I2S SET PINS: %s\n", result == ESP_OK ? PASS : FAIL);
+  M5.Log(ESP_LOG_INFO    , "I2S SET PINS: %s", result == ESP_OK ? PASS : FAIL);
 }
 
 void acquire_sample_chunk(uint32_t t_now) {

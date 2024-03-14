@@ -268,7 +268,7 @@ bool stream_magnitudes = false;
 bool stream_spectrogram = false;
 bool stream_chromagram = false;
 
-bool debug_mode = false;
+bool debug_mode = true;
 uint64_t chip_id = 0;
 uint32_t chip_id_high = 0;
 uint32_t chip_id_low  = 0;

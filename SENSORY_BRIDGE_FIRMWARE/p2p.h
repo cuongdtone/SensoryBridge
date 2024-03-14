@@ -168,7 +168,7 @@ void on_data_rx(const uint8_t *mac_addr, const uint8_t *incoming_data, int len) 
 void init_p2p() {
   WiFi.mode(WIFI_MODE_STA);
 
-  printf("ESP-NOW INIT: %s\n", esp_err_to_name(esp_now_init()));
+  M5.Log(ESP_LOG_INFO    , "ESP-NOW INIT: %s", esp_err_to_name(esp_now_init()));
 
   esp_now_register_send_cb(on_data_tx);
   esp_now_register_recv_cb(on_data_rx);
@@ -178,7 +178,7 @@ void init_p2p() {
   broadcast_peer.channel = 0; // TODO - avoid broadcast mode to allow for other WIFI channels (Promiscuous only works on channel 0)
   broadcast_peer.encrypt = false;
 
-  printf("ESP-NOW ADD BROADCAST PEER: %s\n", esp_err_to_name(esp_now_add_peer(&broadcast_peer)));
+  M5.Log(ESP_LOG_INFO    , "ESP-NOW ADD BROADCAST PEER: %s", esp_err_to_name(esp_now_add_peer(&broadcast_peer)));
 }
 
 void run_p2p() {

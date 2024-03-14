@@ -75,8 +75,8 @@ const float notes[] = {
 #define I2S_DIN_PIN 14
 #define I2S_MCLK_PIN 0
 
-#define LED_DATA_PIN 42
-#define LED_CLOCK_PIN 41
+#define LED_DATA_PIN 8
+#define LED_CLOCK_PIN 9
 
 #define RNG_SEED_PIN 10
 

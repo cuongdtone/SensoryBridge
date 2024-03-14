@@ -1,6 +1,7 @@
 /*----------------------------------------
   Sensory Bridge FILESYSTEM ACCESS
   ----------------------------------------*/
+#include <M5Unified.h>
 
 extern void reboot(); // system.h
 
@@ -10,7 +11,7 @@ void update_config_filename(uint32_t input) {
 
 // Restore all defaults defined in globals.h by removing saved data and rebooting
 void factory_reset() {
-  printf("Deleting %s: ", config_filename);
+  M5.Log(ESP_LOG_INFO   , "Deleting %s: ", config_filename);
 
   if (LittleFS.remove(config_filename)) {
     printf("file deleted\n");
@@ -30,12 +31,12 @@ void factory_reset() {
 
 // Restore only configuration defaults
 void restore_defaults() {
-  printf("Deleting %s: ", config_filename);
+  M5.Log(ESP_LOG_INFO   , "Deleting %s: ", config_filename);
 
   if (LittleFS.remove(config_filename)) {
-    printf("file deleted\n");
+    M5.Log(ESP_LOG_INFO   , "file deleted");
   } else {
-    printf("delete failed\n");
+    M5.Log(ESP_LOG_ERROR   , "delete failed");
   }
 
   reboot();
@@ -51,7 +52,7 @@ void save_config() {
     if (debug_mode) {
       printf("Failed to open ");
       printf(config_filename);
-      printf(" for writing!\n");
+      printf(" for writing!");
     }
     return;
   } else {
@@ -66,7 +67,7 @@ void save_config() {
     if (debug_mode) {
       printf("WROTE ");
       printf(config_filename);
-      printf(" SUCCESSFULLY\n");
+      printf(" SUCCESSFULLY");
     }
   }
   file.close();
@@ -75,7 +76,7 @@ void save_config() {
 // Save configuration to LittleFS 10 seconds from now
 void save_config_delayed() {
   if(debug_mode == true){
-    printf("CONFIG SAVE QUEUED\n");
+    printf("CONFIG SAVE QUEUED");
   }
   next_save_time = millis()+5000;
   settings_updated = true;
@@ -84,16 +85,14 @@ void save_config_delayed() {
 // Load configuration from LittleFS
 void load_config() {
   if (debug_mode) {
-    printf("LITTLEFS: ");
+    M5.Log(ESP_LOG_INFO   , "LITTLEFS: ");
   }
 
   bool queue_factory_reset = false;
   File file = LittleFS.open(config_filename, FILE_READ);
   if (!file) {
     if (debug_mode) {
-      printf("Failed to open ");
-      printf(config_filename);
-      printf(" for reading!\n");
+      M5.Log(ESP_LOG_ERROR   ,"Failed to open %s for reading!", config_filename);
     }
     return;
   } else {
@@ -106,7 +105,7 @@ void load_config() {
     memcpy(&CONFIG, config_buffer, sizeof(CONFIG));
 
     if (debug_mode) {
-      printf("READ CONFIG SUCCESSFULLY\n");
+      M5.Log(ESP_LOG_ERROR   , "READ CONFIG SUCCESSFULLY");
     }
   }
   file.close();
@@ -124,7 +123,7 @@ void save_ambient_noise_calibration() {
   File file = LittleFS.open("/noise_cal.bin", FILE_WRITE);
   if (!file) {
     if (debug_mode) {
-      printf("Failed to open file for writing!\n");
+      printf("Failed to open file for writing!");
     }
     return;
   }
@@ -152,12 +151,12 @@ void save_ambient_noise_calibration() {
 // Load noise calibration from LittleFS
 void load_ambient_noise_calibration() {
   if (debug_mode) {
-    printf("LOADING AMBIENT_NOISE PROFILE... ");
+    M5.Log(ESP_LOG_INFO   ,"LOADING AMBIENT_NOISE PROFILE... ");
   }
   File file = LittleFS.open("/noise_cal.bin", FILE_READ);
   if (!file) {
     if (debug_mode) {
-      printf("Failed to open file for reading!\n");
+      M5.Log(ESP_LOG_ERROR  ,"Failed to open file for reading!");
     }
     return;
   }
@@ -176,14 +175,13 @@ void load_ambient_noise_calibration() {
 
   file.close();
   if (debug_mode) {
-    printf("LOAD COMPLETE\n");
+    M5.Log(ESP_LOG_INFO    , "LOAD COMPLETE");
   }
 }
 
 // Initialize LittleFS
 void init_fs() {
-  printf("INIT FILESYSTEM: ");
-  printf("%s\n", LittleFS.begin(true) == true ? PASS : FAIL);
+  M5.Log(ESP_LOG_INFO    ,  "INIT FILESYSTEM: %s", LittleFS.begin(true) == true ? PASS : FAIL);
 
   update_config_filename(FIRMWARE_VERSION);
 

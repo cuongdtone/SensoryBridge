@@ -729,7 +729,7 @@ void init_leds() {
 
   leds_started = true;
 
-  printf("INIT_LEDS: %s\n", leds_started == true ? PASS : FAIL);
+  M5.Log(ESP_LOG_INFO    , "INIT_LEDS: %s", leds_started == true ? PASS : FAIL);
 }
 
 void blocking_flash(CRGB16 col) {

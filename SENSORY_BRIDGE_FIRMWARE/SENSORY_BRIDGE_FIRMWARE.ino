@@ -98,11 +98,16 @@ enum lightshow_modes {
 #include "system.h"           // Watch how fast I can check if settings were updated... yada yada..
 #include "GDFT.h"             // Conversion to (and post-processing of) frequency data! (hey, something cool!)
 #include "lightshow_modes.h"  // --- FINALLY, the FUN STUFF!
+#include <M5Unified.h>
 
 // Setup, runs only one time ---------------------------------------------------------
 void setup() {
-  printf("Init SB\n");
+  init_log();
+  M5.Log(ESP_LOG_INFO    , "Init System ...");
+  
   init_system();  // (system.h) Initialize all hardware and arrays
+  delay(500);
+  M5.Display.clear();
 
   // Create thread specifically for LED updates
   xTaskCreatePinnedToCore(led_thread, "led_task", 4096, NULL, tskIDLE_PRIORITY + 1, &led_task, 1);

@@ -4,6 +4,7 @@
 
 // These functions watch the Serial port for incoming commands,
 // and perform actions based on whatis recieved.
+#include <M5Unified.h>
 
 extern void check_current_function();  // system.h
 extern void reboot();                  // system.h
@@ -52,7 +53,7 @@ void stop_streams() {
 }
 
 void init_serial(uint32_t baud_rate) {
-  USBSerial.begin(baud_rate);  // Default 500,000 baud
+  // USBSerial.begin(baud_rate);  // Default 500,000 baud
   bool timeout = false;
   bool serial_started = true;
   uint32_t t_start = millis();
@@ -68,34 +69,34 @@ void init_serial(uint32_t baud_rate) {
   }
 
   // Print welcome message
-  printf("---------------------------\n");
-  printf("SENSORY BRIDGE | VER: %d\n", FIRMWARE_VERSION);
-  printf("---------------------------\n\n");
-  printf("INIT_SERIAL: %s\n", serial_started == true ? "PASS" : "FAIL");
+  M5.Log(ESP_LOG_INFO, "---------------------------");
+  M5.Log(ESP_LOG_INFO, "SENSORY BRIDGE | VER: %d", FIRMWARE_VERSION);
+  M5.Log(ESP_LOG_INFO, "---------------------------");
+  M5.Log(ESP_LOG_INFO, "INIT_SERIAL: %s", serial_started == true ? "PASS" : "FAIL");
 }
 
 // This is for development purposes, and allows the user to dump
 // the current values of many variables to the monitor at once
 void dump_info() {
-  printf("FIRMWARE_VERSION: %d\n", FIRMWARE_VERSION);
+  printf("FIRMWARE_VERSION: %d", FIRMWARE_VERSION);
 
   printf("CHIP ID: ");
   print_chip_id();
 
-  printf("noise_button.pressed: %s\n", noise_button.pressed ? "true" : "false");
-  printf("noise_button.last_down: %lu\n", noise_button.last_down);
-  printf("noise_button.last_up: %lu\n", noise_button.last_up);
-  printf("noise_button.pin: %d\n", noise_button.pin);
+  printf("noise_button.pressed: %s", noise_button.pressed ? "true" : "false");
+  printf("noise_button.last_down: %lu", noise_button.last_down);
+  printf("noise_button.last_up: %lu", noise_button.last_up);
+  printf("noise_button.pin: %d", noise_button.pin);
 
-  printf("mode_button.pressed: %s\n", mode_button.pressed ? "true" : "false");
-  printf("mode_button.last_down: %lu\n", mode_button.last_down);
-  printf("mode_button.last_up: %lu\n", mode_button.last_up);
-  printf("mode_button.pin: %d\n", mode_button.pin);
+  printf("mode_button.pressed: %s", mode_button.pressed ? "true" : "false");
+  printf("mode_button.last_down: %lu", mode_button.last_down);
+  printf("mode_button.last_up: %lu", mode_button.last_up);
+  printf("mode_button.pin: %d", mode_button.pin);
 
 
-  printf("CONFIG.PHOTONS: %.6f\n", CONFIG.PHOTONS);
-  printf("CONFIG.CHROMA: %.6f\n", CONFIG.CHROMA);
-  printf("CONFIG.MOOD: %.6f\n", CONFIG.MOOD);
+  printf("CONFIG.PHOTONS: %.6f", CONFIG.PHOTONS);
+  printf("CONFIG.CHROMA: %.6f", CONFIG.CHROMA);
+  printf("CONFIG.MOOD: %.6f", CONFIG.MOOD);
   printf("CONFIG.LIGHTSHOW_MODE: %u\n", CONFIG.LIGHTSHOW_MODE);
   printf("CONFIG.MIRROR_ENABLED: %s\n", CONFIG.MIRROR_ENABLED ? "true" : "false");
   printf("CONFIG.CHROMAGRAM_RANGE: %u\n", CONFIG.CHROMAGRAM_RANGE);
