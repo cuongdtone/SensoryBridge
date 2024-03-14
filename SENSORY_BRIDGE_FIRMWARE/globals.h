@@ -260,7 +260,7 @@ bool     settings_updated = false;
 char    command_buf[128] = {0};
 uint8_t command_buf_index = 0;
 
-bool stream_audio = false;
+bool stream_audio = true;
 bool stream_fps = false;
 bool stream_max_mags = false;
 bool stream_max_mags_followers = false;

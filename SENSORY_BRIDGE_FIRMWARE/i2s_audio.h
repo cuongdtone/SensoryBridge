@@ -74,14 +74,14 @@ void acquire_sample_chunk(uint32_t t_now) {
   }
 
   if (stream_audio == true) {
-    printf("sbs((audio=");
+    M5.Display.printf("sbs((audio=");
     for (uint16_t i = 0; i < CONFIG.SAMPLES_PER_CHUNK; i++) {
-      printf("%d", waveform[i]);
+      M5.Display.printf("%d", waveform[i]);
       if (i < CONFIG.SAMPLES_PER_CHUNK - 1) {
-        printf(",");
+        M5.Display.printf(",");
       }
     }
-    printf("))\n");
+    M5.Display.print("))\n");
   }
 
   if (noise_complete == false) {

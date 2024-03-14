@@ -108,6 +108,9 @@ void setup() {
   init_system();  // (system.h) Initialize all hardware and arrays
   delay(500);
   M5.Display.clear();
+  M5.Display.setTextSize(6);
+  M5.Display.setCursor(0, 50);
+  M5.Display.printf("Sensory Bridge");
 
   // Create thread specifically for LED updates
   xTaskCreatePinnedToCore(led_thread, "led_task", 4096, NULL, tskIDLE_PRIORITY + 1, &led_task, 1);
